@@ -1,1 +1,26 @@
+service: house-price-prediction
+
+provider:
+  name: aws
+  runtime: python3.9
+  region: ap-south-1
+
+functions:
+  app:
+    handler: wsgi_handler.handler
+    events:
+      - http:
+          path: /
+          method: ANY
+      - http:
+          path: /{proxy+}
+          method: ANY
+
+plugins:
+  - serverless-wsgi
+  - serverless-python-requirements
+
+custom:
+  wsgi:
+    app: app.app
 
