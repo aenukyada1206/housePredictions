@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>House Price Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+        }
+        .container {
+            width: 400px;
+            margin: 100px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #result {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>House Price Prediction</h2>
+
+    <input type="number" id="area" placeholder="Area (sq ft)" required>
+    <input type="number" id="bedrooms" placeholder="Bedrooms" required>
+
+    <button onclick="predictPrice()">Predict Price</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    async function predictPrice() {
+
+        const area = document.getElementById("area").value;
+        const bedrooms = document.getElementById("bedrooms").value;
+
+        if (!area || !bedrooms) {
+            alert("Please enter all fields");
+            return;
+        }
+
+        const apiUrl = "/predict";  // 👈 SAME SERVER
+
+        const response = await fetch(apiUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                area: Number(area),
+                bedrooms: Number(bedrooms)
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.predicted_price) {
+            document.getElementById("result").innerHTML =
+                "Predicted Price: ₹ " + data.predicted_price;
+        } else {
+            document.getElementById("result").innerHTML =
+                "Error predicting price";
+        }
+    }
+</script>
+
+
+</body>
+</html>
